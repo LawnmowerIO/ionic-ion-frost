@@ -58,24 +58,33 @@ angular.module('ionic.contrib.frost', ['ionic'])
   return {
     restrict: 'A',
     link: function($scope, $element, $attr) {
-      var blurContent = null;
+        var blurContent = null;
 
-      $rootScope.$on('ionicFrosted.update', function() {
-        window.rAF(function() {
+        $rootScope.$on('ionicFrosted.update', function() {
+        ionic.requestAnimationFrame(function() {
           if(blurContent) {
             blurContent.remove();
             blurContent = clone($element);
+          } else {
+              // blurContent doesn't exist yet, let's create it
+              $timeout(function() {
+                  ionic.requestAnimationFrame(function() {
+                      blurContent = clone($element);
+                  });
+              });
           }
         });
       });
 
-      // timeout so we allow child directives to
-      // render children
-      $timeout(function() {
-        ionic.requestAnimationFrame(function() {
-          blurContent = clone($element);
+      if ($attr.frost === 'true'){
+        // timeout so we allow child directives to
+        // render children
+        $timeout(function() {
+          ionic.requestAnimationFrame(function() {
+            blurContent = clone($element);
+          });
         });
-      });
+      }
     }
   }
 }])
