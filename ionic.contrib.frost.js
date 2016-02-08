@@ -13,6 +13,9 @@ angular.module('ionic.contrib.frost', ['ionic'])
   return {
     update: function() {
       $rootScope.$emit('ionicFrosted.update');
+    },
+    remove: function() {
+        $rootScope.$emit('ionicFrosted.remove');
     }
   }
 }])
@@ -75,6 +78,14 @@ angular.module('ionic.contrib.frost', ['ionic'])
           }
         });
       });
+
+        $rootScope.$on('ionicFrosted.remove', function() {
+            ionic.requestAnimationFrame(function() {
+                if(blurContent) {
+                    blurContent.remove();
+                }
+            });
+        });
 
       if ($attr.frost === 'true'){
         // timeout so we allow child directives to
